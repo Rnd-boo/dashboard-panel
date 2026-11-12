@@ -8,6 +8,12 @@ const statusColor = {
   fault: "destructive",
 } as const;
 
+const statusLabel = {
+  active: "Aktif",
+  inactive: "Nonaktif",
+  fault: "Gangguan",
+} as const;
+
 export function PanelCard({ panel }: { panel: SolarPanel }) {
   const utilization =
     panel.capacity > 0
@@ -19,12 +25,14 @@ export function PanelCard({ panel }: { panel: SolarPanel }) {
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span className="truncate">{panel.name}</span>
-          <Badge variant={statusColor[panel.status]}>{panel.status}</Badge>
+          <Badge variant={statusColor[panel.status]}>
+            {statusLabel[panel.status]}
+          </Badge>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Output</span>
+          <span className="text-muted-foreground">Daya</span>
           <span className="font-medium">
             {panel.currentOutput}W / {panel.capacity}Wp
           </span>

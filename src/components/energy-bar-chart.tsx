@@ -20,7 +20,7 @@ export function EnergyBarChart({
     <Card>
       <CardHeader className="pb-2">
         <CardTitle className="text-base sm:text-lg">
-          Daily Energy Yield (kWh)
+          Hasil Energi Harian (kWh)
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -63,7 +63,7 @@ export function EnergyBarChart({
               />
               <Bar
                 dataKey="energy"
-                name="Yield (kWh)"
+                name="Hasil Energi (kWh)"
                 fill="hsl(48, 96%, 53%)"
                 radius={[4, 4, 0, 0]}
               />

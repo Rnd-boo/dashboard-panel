@@ -16,14 +16,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Solar Panel Dashboard",
-  description: "Short-term solar panel output power estimation and prediction",
+  title: "Dasbor Panel Surya",
+  description: "Estimasi dan prediksi keluaran daya panel surya jangka pendek",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
+      lang="id"
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >

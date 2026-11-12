@@ -8,9 +8,9 @@ export default function PanelsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Solar Panels</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Panel Surya</h1>
         <p className="text-sm text-muted-foreground">
-          {active} active · {totalOutput}W total output
+          {active} aktif · {totalOutput}W total daya
         </p>
       </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

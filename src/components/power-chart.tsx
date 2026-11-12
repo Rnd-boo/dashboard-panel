@@ -17,7 +17,7 @@ export function PowerChart({ data }: { data: PanelReading[] }) {
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-base sm:text-lg">Power Output & Irradiance</CardTitle>
+        <CardTitle className="text-base sm:text-lg">Keluaran Daya & Radiasi Matahari</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-[240px] sm:h-[280px] w-full">
@@ -66,7 +66,7 @@ export function PowerChart({ data }: { data: PanelReading[] }) {
                 yAxisId="power"
                 type="monotone"
                 dataKey="powerOutput"
-                name="Power (W)"
+                name="Daya (W)"
                 stroke="hsl(48, 96%, 53%)"
                 strokeWidth={2}
                 dot={false}
@@ -76,7 +76,7 @@ export function PowerChart({ data }: { data: PanelReading[] }) {
                 yAxisId="irradiance"
                 type="monotone"
                 dataKey="irradiance"
-                name="Irradiance (W/m²)"
+                name="Radiasi (W/m²)"
                 stroke="hsl(25, 95%, 53%)"
                 strokeWidth={2}
                 dot={false}

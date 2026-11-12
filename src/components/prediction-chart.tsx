@@ -17,9 +17,9 @@ export function PredictionChart({ data }: { data: HourlyPrediction[] }) {
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-base sm:text-lg">Predicted vs Actual Output</CardTitle>
+        <CardTitle className="text-base sm:text-lg">Prediksi vs Keluaran Aktual</CardTitle>
         <CardDescription className="text-xs sm:text-sm">
-          Short-term power output estimation (next 6 hours)
+          Estimasi keluaran daya jangka pendek (6 jam ke depan)
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -59,7 +59,7 @@ export function PredictionChart({ data }: { data: HourlyPrediction[] }) {
               <Line
                 type="monotone"
                 dataKey="actual"
-                name="Actual (W)"
+                name="Aktual (W)"
                 stroke="hsl(48, 96%, 53%)"
                 strokeWidth={2}
                 dot={{ r: 3 }}
@@ -68,7 +68,7 @@ export function PredictionChart({ data }: { data: HourlyPrediction[] }) {
               <Line
                 type="monotone"
                 dataKey="predicted"
-                name="Predicted (W)"
+                name="Prediksi (W)"
                 stroke="hsl(217, 91%, 60%)"
                 strokeWidth={2}
                 strokeDasharray="6 3"
