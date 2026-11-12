@@ -23,6 +23,17 @@ export type HourlyPrediction = {
   actual?: number; // W (only for past hours)
 };
 
+export type HistoryRecord = {
+  date: string;
+  dayLabel: string;
+  energy: number; // kWh
+  peakPower: number; // W
+  avgIrradiance: number; // W/m²
+  avgTemp: number; // °C
+  efficiency: number; // %
+  status: "optimal" | "normal" | "rendah";
+};
+
 // Simulate a solar bell curve — peaks around noon
 function solarCurve(hour: number): number {
   if (hour < 6 || hour > 19) return 0;
@@ -54,7 +65,7 @@ export const panelReadings: PanelReading[] = Array.from({ length: 24 }, (_, i) =
 export const dailyEnergy = Array.from({ length: 7 }, (_, i) => {
   const d = new Date();
   d.setDate(d.getDate() - (6 - i));
-  const dayName = d.toLocaleDateString("en-US", { weekday: "short" });
+  const dayName = d.toLocaleDateString("id-ID", { weekday: "short" });
   return {
     day: dayName,
     energy: Math.round((18 + Math.random() * 12) * 10) / 10, // 18-30 kWh
@@ -62,12 +73,12 @@ export const dailyEnergy = Array.from({ length: 7 }, (_, i) => {
 });
 
 export const panels: SolarPanel[] = [
-  { id: "sp-001", name: "Rooftop Array A", capacity: 400, status: "active", currentOutput: 320, panelTemp: 42, location: "Main Roof - East" },
-  { id: "sp-002", name: "Rooftop Array B", capacity: 400, status: "active", currentOutput: 305, panelTemp: 44, location: "Main Roof - West" },
-  { id: "sp-003", name: "Ground Mount 1", capacity: 550, status: "active", currentOutput: 480, panelTemp: 38, location: "South Field" },
-  { id: "sp-004", name: "Carport Array", capacity: 300, status: "active", currentOutput: 210, panelTemp: 40, location: "Parking Lot" },
-  { id: "sp-005", name: "Façade Panel", capacity: 200, status: "inactive", currentOutput: 0, panelTemp: 28, location: "Building South Wall" },
-  { id: "sp-006", name: "Tracker Unit", capacity: 500, status: "fault", currentOutput: 0, panelTemp: 35, location: "East Lot" },
+  { id: "sp-001", name: "Array Atap A", capacity: 400, status: "active", currentOutput: 320, panelTemp: 42, location: "Atap Utama - Timur" },
+  { id: "sp-002", name: "Array Atap B", capacity: 400, status: "active", currentOutput: 305, panelTemp: 44, location: "Atap Utama - Barat" },
+  { id: "sp-003", name: "Panel Tanah 1", capacity: 550, status: "active", currentOutput: 480, panelTemp: 38, location: "Area Selatan" },
+  { id: "sp-004", name: "Array Carport", capacity: 300, status: "active", currentOutput: 210, panelTemp: 40, location: "Area Parkir" },
+  { id: "sp-005", name: "Panel Fasad", capacity: 200, status: "inactive", currentOutput: 0, panelTemp: 28, location: "Dinding Selatan" },
+  { id: "sp-006", name: "Unit Pelacak", capacity: 500, status: "fault", currentOutput: 0, panelTemp: 35, location: "Area Timur" },
 ];
 
 // Predictions: past 4 hours (actual + predicted) + next 6 hours (predicted only)
@@ -109,5 +120,52 @@ export function getStats() {
     activePanels,
     totalPanels: panels.length,
     predictedNextHour: nextPrediction?.predicted ?? 0,
+  };
+}
+
+// 30 days history data
+export const historyRecords: HistoryRecord[] = Array.from({ length: 30 }, (_, i) => {
+  const d = new Date();
+  d.setDate(d.getDate() - (29 - i));
+  const dateStr = d.toISOString().split("T")[0];
+  const dayLabel = d.toLocaleDateString("id-ID", { day: "numeric", month: "short" });
+
+  const factor = 0.65 + Math.sin(i / 3) * 0.25 + (Math.sin(i * 7) * 0.1);
+  const energy = Math.round((22 * factor) * 10) / 10;
+  const peakPower = Math.round(1800 * factor);
+  const avgIrradiance = Math.round(520 * factor);
+  const avgTemp = Math.round((27 + factor * 7) * 10) / 10;
+  const efficiency = Math.round((18.5 * (factor > 0.8 ? 1 : 0.95)) * 10) / 10;
+
+  let status: HistoryRecord["status"] = "normal";
+  if (energy >= 20) status = "optimal";
+  else if (energy < 14) status = "rendah";
+
+  return {
+    date: dateStr,
+    dayLabel,
+    energy,
+    peakPower,
+    avgIrradiance,
+    avgTemp,
+    efficiency,
+    status,
+  };
+});
+
+export function getHistoryStats(records: HistoryRecord[] = historyRecords) {
+  const totalEnergy = Math.round(records.reduce((sum, r) => sum + r.energy, 0) * 10) / 10;
+  const avgEnergy = Math.round((totalEnergy / records.length) * 10) / 10;
+  const maxDay = records.reduce((max, r) => (r.energy > max.energy ? r : max), records[0]);
+  const avgEfficiency =
+    Math.round((records.reduce((sum, r) => sum + r.efficiency, 0) / records.length) * 10) / 10;
+
+  return {
+    totalEnergy,
+    avgEnergy,
+    peakEnergy: maxDay.energy,
+    peakDayLabel: maxDay.dayLabel,
+    avgEfficiency,
+    recordCount: records.length,
   };
 }

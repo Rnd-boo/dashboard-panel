@@ -34,4 +34,13 @@ const stats = getStats();
 assert(stats.totalCurrentOutput >= 0, "Total output must be non-negative");
 assert(stats.totalPanels === panels.length, "Total panels count mismatch");
 
+// History records
+import { historyRecords, getHistoryStats } from "./mock-data";
+assert(historyRecords.length === 30, "Should have 30 history records");
+assert(historyRecords.every((h) => h.energy > 0), "History energy must be positive");
+assert(historyRecords.every((h) => h.peakPower > 0), "Peak power must be positive");
+const historyStats = getHistoryStats(historyRecords.slice(-14));
+assert(historyStats.totalEnergy > 0, "Total energy must be positive");
+assert(historyStats.recordCount === 14, "History slice count mismatch");
+
 console.log("✓ Solar dashboard self-check passed");

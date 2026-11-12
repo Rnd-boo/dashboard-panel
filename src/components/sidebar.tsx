@@ -7,11 +7,13 @@ import {
   MonitorActivity,
   PanelLeftRightDashed,
   TrendingUpDown,
+  History,
 } from "lucide-react";
 export const navItems = [
   { href: "/", label: "Dashboard", icon: MonitorActivity },
   { href: "/panels", label: "Panels", icon: PanelLeftRightDashed },
   { href: "/predictions", label: "Predictions", icon: TrendingUpDown },
+  { href: "/history", label: "History", icon: History },
 ];
 
 export function Sidebar() {
