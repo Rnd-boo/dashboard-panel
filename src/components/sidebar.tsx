@@ -10,10 +10,10 @@ import {
   History,
 } from "lucide-react";
 export const navItems = [
-  { href: "/", label: "Dashboard", icon: MonitorActivity },
-  { href: "/panels", label: "Panels", icon: PanelLeftRightDashed },
-  { href: "/predictions", label: "Predictions", icon: TrendingUpDown },
-  { href: "/history", label: "History", icon: History },
+  { href: "/", label: "Dasbor", icon: MonitorActivity },
+  { href: "/panels", label: "Detail Sensor", icon: PanelLeftRightDashed },
+  { href: "/predictions", label: "Prediksi", icon: TrendingUpDown },
+  { href: "/history", label: "Riwayat", icon: History },
 ];
 
 export function Sidebar() {

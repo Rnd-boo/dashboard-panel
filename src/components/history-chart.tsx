@@ -12,9 +12,14 @@ import {
   Legend,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import type { HistoryRecord } from "@/lib/mock-data";
 
-export function HistoryChart({ data }: { data: HistoryRecord[] }) {
+type DailyRow = {
+  dayLabel: string;
+  energy: number;
+  peakPower: number;
+};
+
+export function HistoryChart({ data }: { data: DailyRow[] }) {
   return (
     <Card>
       <CardHeader className="pb-2">

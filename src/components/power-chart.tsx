@@ -11,13 +11,18 @@ import {
   Legend,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { PanelReading } from "@/lib/mock-data";
 
-export function PowerChart({ data }: { data: PanelReading[] }) {
+type ChartRow = {
+  time: string;
+  power: number;
+  light_lux: number | null;
+};
+
+export function PowerChart({ data }: { data: ChartRow[] }) {
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-base sm:text-lg">Keluaran Daya & Radiasi Matahari</CardTitle>
+        <CardTitle className="text-base sm:text-lg">Keluaran Daya & Cahaya</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-[240px] sm:h-[280px] w-full">
@@ -43,12 +48,13 @@ export function PowerChart({ data }: { data: PanelReading[] }) {
                 unit="W"
               />
               <YAxis
-                yAxisId="irradiance"
+                yAxisId="lux"
                 orientation="right"
-                width={45}
+                width={50}
                 tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
                 tickLine={false}
                 axisLine={false}
+                unit=" lux"
               />
               <Tooltip
                 contentStyle={{
@@ -65,7 +71,7 @@ export function PowerChart({ data }: { data: PanelReading[] }) {
               <Line
                 yAxisId="power"
                 type="monotone"
-                dataKey="powerOutput"
+                dataKey="power"
                 name="Daya (W)"
                 stroke="hsl(48, 96%, 53%)"
                 strokeWidth={2}
@@ -73,14 +79,15 @@ export function PowerChart({ data }: { data: PanelReading[] }) {
                 activeDot={{ r: 4 }}
               />
               <Line
-                yAxisId="irradiance"
+                yAxisId="lux"
                 type="monotone"
-                dataKey="irradiance"
-                name="Radiasi (W/m²)"
+                dataKey="light_lux"
+                name="Cahaya (lux)"
                 stroke="hsl(25, 95%, 53%)"
                 strokeWidth={2}
                 dot={false}
                 strokeDasharray="5 5"
+                connectNulls
               />
             </LineChart>
           </ResponsiveContainer>
