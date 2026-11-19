@@ -10,16 +10,35 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import type { HourlyPrediction } from "@/lib/mock-data";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 
-export function PredictionChart({ data }: { data: HourlyPrediction[] }) {
+export type PredictionChartPoint = {
+  time: string;
+  actual?: number;
+  predicted?: number;
+};
+
+export function PredictionChart({
+  data,
+  forecastMinutes = 30,
+}: {
+  data: PredictionChartPoint[];
+  forecastMinutes?: number;
+}) {
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-base sm:text-lg">Prediksi vs Keluaran Aktual</CardTitle>
+        <CardTitle className="text-base sm:text-lg">
+          Prediksi vs Keluaran Aktual
+        </CardTitle>
         <CardDescription className="text-xs sm:text-sm">
-          Estimasi keluaran daya jangka pendek (6 jam ke depan)
+          Estimasi keluaran daya jangka pendek ({forecastMinutes} menit ke depan)
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -29,7 +48,11 @@ export function PredictionChart({ data }: { data: HourlyPrediction[] }) {
               data={data}
               margin={{ top: 5, right: 5, left: -20, bottom: 0 }}
             >
-              <CartesianGrid strokeDasharray="3 3" className="stroke-border" opacity={0.6} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                className="stroke-border"
+                opacity={0.6}
+              />
               <XAxis
                 dataKey="time"
                 tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
@@ -53,7 +76,10 @@ export function PredictionChart({ data }: { data: HourlyPrediction[] }) {
                   fontSize: 12,
                 }}
                 itemStyle={{ color: "var(--color-foreground)" }}
-                labelStyle={{ color: "var(--color-muted-foreground)", fontWeight: 500 }}
+                labelStyle={{
+                  color: "var(--color-muted-foreground)",
+                  fontWeight: 500,
+                }}
               />
               <Legend wrapperStyle={{ fontSize: 12, paddingTop: 6 }} />
               <Line

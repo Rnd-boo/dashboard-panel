@@ -14,9 +14,8 @@ import { useMemo } from "react";
 
 export default function Home() {
   const { data: latest, loading: loadingLatest } = useLatestReadings(48);
-  const { data: today, loading: loadingToday } = useTodayReadings();
+  const { data: today, isLoading: loadingToday } = useTodayReadings();
   const { data: week } = useReadingsByDays(7);
-
   const chartData = useMemo(
     () =>
       latest.map((r) => ({
@@ -24,7 +23,7 @@ export default function Home() {
         power: r.power,
         light_lux: r.light_lux,
       })),
-    [latest]
+    [latest],
   );
 
   const dailyEnergy = useMemo(() => {
@@ -33,7 +32,7 @@ export default function Home() {
   }, [week]);
 
   const stats = useMemo(() => {
-    if (today.length === 0)
+    if (today?.length === 0)
       return {
         currentPower: 0,
         peakPower: 0,
@@ -46,7 +45,6 @@ export default function Home() {
     const lastReading = today[today.length - 1];
     const peakPower = Math.max(...today.map((r) => r.power));
 
-    // Energy estimate (Wh → kWh)
     let energyWh = 0;
     for (let i = 1; i < today.length; i++) {
       const dt =
@@ -59,7 +57,7 @@ export default function Home() {
     return {
       currentPower: Math.round(lastReading.power * 100) / 100,
       peakPower: Math.round(peakPower * 100) / 100,
-      todayEnergy: Math.round((energyWh / 1000) * 100) / 100,
+      todayEnergy: Math.round(energyWh * 100) / 100,
       latestVoltage: Math.round(lastReading.voltage * 100) / 100,
       latestTemp: lastReading.panel_temperature,
       readingCount: today.length,
@@ -109,7 +107,7 @@ export default function Home() {
         <StatCard
           title="Hasil Hari Ini"
           value={stats.todayEnergy}
-          unit="kWh"
+          unit="Wh"
           subtitle="Estimasi energi"
         />
         <StatCard
@@ -119,7 +117,7 @@ export default function Home() {
           subtitle="Puncak hari ini"
         />
         <StatCard
-          title="Suhu Panel"
+          title="Suhu Panel (POWER PREDICTION ??)"
           value={stats.latestTemp ?? "—"}
           unit={stats.latestTemp != null ? "°C" : ""}
           subtitle="Pembacaan terakhir"

@@ -105,19 +105,19 @@ export default function HistoryPage() {
         <StatCard
           title="Total Produksi"
           value={stats.totalEnergy}
-          unit="kWh"
+          unit="Wh"
           subtitle={`${stats.dayCount} hari data`}
         />
         <StatCard
           title="Rata-rata Harian"
           value={stats.avgEnergy}
-          unit="kWh/hari"
+          unit="Wh/hari"
           subtitle="Estimasi per hari"
         />
         <StatCard
           title="Produksi Tertinggi"
           value={stats.peakEnergy}
-          unit="kWh"
+          unit="Wh"
           subtitle={`Pada ${stats.peakDayLabel}`}
         />
         <StatCard

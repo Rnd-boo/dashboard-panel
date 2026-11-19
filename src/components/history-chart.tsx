@@ -27,7 +27,7 @@ export function HistoryChart({ data }: { data: DailyRow[] }) {
           Tren Produksi Energi Historis
         </CardTitle>
         <CardDescription className="text-xs sm:text-sm">
-          Perbandingan hasil energi (kWh) dan daya puncak harian (W)
+          Perbandingan hasil energi (Wh) dan daya puncak harian (W)
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -61,7 +61,7 @@ export function HistoryChart({ data }: { data: DailyRow[] }) {
                 tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
                 tickLine={false}
                 axisLine={false}
-                unit=" kWh"
+                unit=" Wh"
               />
               <YAxis
                 yAxisId="power"
@@ -91,7 +91,7 @@ export function HistoryChart({ data }: { data: DailyRow[] }) {
                 yAxisId="energy"
                 type="monotone"
                 dataKey="energy"
-                name="Energi (kWh)"
+                name="Energi (Wh)"
                 stroke="hsl(48, 96%, 53%)"
                 strokeWidth={2}
                 fillOpacity={1}

@@ -3,17 +3,15 @@
 import { useMemo } from "react";
 import { StatCard } from "@/components/stat-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { useLatestReadings, formatTime } from "@/lib/supabase/hooks";
+import { useLatestReadings } from "@/lib/supabase/hooks";
 
 export default function PanelsPage() {
   const { data: readings, loading } = useLatestReadings(50);
-
   const latest = readings.length > 0 ? readings[readings.length - 1] : null;
 
   const recentTable = useMemo(
     () => readings.slice().reverse().slice(0, 20),
-    [readings]
+    [readings],
   );
 
   if (loading) {
@@ -58,16 +56,8 @@ export default function PanelsPage() {
       {/* Current readings */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
         <StatCard title="Daya" value={latest.power} unit="W" />
-        <StatCard
-          title="Tegangan"
-          value={latest.voltage}
-          unit="V"
-        />
-        <StatCard
-          title="Arus"
-          value={latest.current}
-          unit="A"
-        />
+        <StatCard title="Tegangan" value={latest.voltage} unit="V" />
+        <StatCard title="Arus" value={latest.current} unit="A" />
         <StatCard
           title="Suhu Panel"
           value={latest.panel_temperature ?? "—"}
@@ -88,11 +78,7 @@ export default function PanelsPage() {
           value={latest.humidity ?? "—"}
           unit={latest.humidity != null ? "%" : ""}
         />
-        <StatCard
-          title="ID Pembacaan"
-          value={`#${latest.id}`}
-          unit=""
-        />
+        <StatCard title="ID Pembacaan" value={`#${latest.id}`} unit="" />
       </div>
 
       {/* Recent readings table */}
@@ -131,9 +117,7 @@ export default function PanelsPage() {
                         minute: "2-digit",
                       })}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
-                      {r.power} W
-                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">{r.power} W</td>
                     <td className="px-4 py-3 whitespace-nowrap text-muted-foreground">
                       {r.voltage} V
                     </td>
