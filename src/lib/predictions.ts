@@ -5,9 +5,9 @@ export type PredictionInput = {
   current: number;
   power: number;
   panel_temperature: number | null;
-  light_lux: number;
-  air_temperature: number;
-  humidity: number;
+  light_lux: number | null;
+  air_temperature: number | null;
+  humidity: number | null;
   recorded_at: string;
 };
 
@@ -46,10 +46,24 @@ export async function getPrediction(): Promise<PredictionResult> {
   const recent = (rows as PredictionInput[]).slice().reverse();
 
   const mlApiUrl = process.env.PYTHON_ML_API_URL || "http://127.0.0.1:8000";
+  // shortcut: Python model requires non-null numeric fields; fallback to recent valid readings or sensor defaults
+  const validLux =
+    latest.light_lux ?? rows.find((r) => r.light_lux != null)?.light_lux ?? 0;
+  const validPanelTemp =
+    latest.panel_temperature ?? latest.air_temperature ?? 25;
+  const validAirTemp =
+    latest.air_temperature ?? latest.panel_temperature ?? 25;
+  const validHumidity = latest.humidity ?? 50;
+
   const payload = {
-    ...latest,
-    // shortcut: Python model requires non-null panel_temperature; fallback to air_temperature
-    panel_temperature: latest.panel_temperature ?? latest.air_temperature ?? 25,
+    voltage: latest.voltage ?? 0,
+    current: latest.current ?? 0,
+    power: latest.power ?? 0,
+    panel_temperature: validPanelTemp,
+    light_lux: validLux,
+    air_temperature: validAirTemp,
+    humidity: validHumidity,
+    recorded_at: latest.recorded_at,
   };
 
   const response = await fetch(`${mlApiUrl}/predict`, {
@@ -62,7 +76,10 @@ export async function getPrediction(): Promise<PredictionResult> {
   });
 
   if (!response.ok) {
-    throw new Error(`Python ML API prediction failed (${response.status})`);
+    const errorText = await response.text();
+    throw new Error(
+      `Python ML API prediction failed (${response.status}): ${errorText}`,
+    );
   }
 
   const prediction = (await response.json()) as PredictionResponse;

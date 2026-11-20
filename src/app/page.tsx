@@ -7,6 +7,7 @@ import {
   useLatestReadings,
   useTodayReadings,
   useReadingsByDays,
+  usePrediction,
   formatTime,
   aggregateDaily,
 } from "@/lib/supabase/hooks";
@@ -16,6 +17,8 @@ export default function Home() {
   const { data: latest, loading: loadingLatest } = useLatestReadings(48);
   const { data: today, isLoading: loadingToday } = useTodayReadings();
   const { data: week } = useReadingsByDays(7);
+  const { data: prediction } = usePrediction();
+
   const chartData = useMemo(
     () =>
       latest.map((r) => ({
@@ -38,7 +41,6 @@ export default function Home() {
         peakPower: 0,
         todayEnergy: 0,
         latestVoltage: 0,
-        latestTemp: null as number | null,
         readingCount: 0,
       };
 
@@ -59,7 +61,6 @@ export default function Home() {
       peakPower: Math.round(peakPower * 100) / 100,
       todayEnergy: Math.round(energyWh * 100) / 100,
       latestVoltage: Math.round(lastReading.voltage * 100) / 100,
-      latestTemp: lastReading.panel_temperature,
       readingCount: today.length,
     };
   }, [today]);
@@ -117,10 +118,14 @@ export default function Home() {
           subtitle="Puncak hari ini"
         />
         <StatCard
-          title="Suhu Panel (POWER PREDICTION ??)"
-          value={stats.latestTemp ?? "—"}
-          unit={stats.latestTemp != null ? "°C" : ""}
-          subtitle="Pembacaan terakhir"
+          title="Prediksi Daya"
+          value={prediction?.prediction?.predicted_power ?? "—"}
+          unit={prediction?.prediction?.unit ?? "W"}
+          subtitle={
+            prediction?.prediction?.forecast_minutes
+              ? `Estimasi +${prediction.prediction.forecast_minutes} menit`
+              : "Estimasi keluaran"
+          }
         />
       </div>
 

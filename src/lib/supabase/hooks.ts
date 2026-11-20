@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/client";
 import type { SensorReading } from "@/lib/supabase/types";
+import type { PredictionResult } from "@/lib/predictions";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "@/components/ui/toast";
 
@@ -88,6 +89,18 @@ export function useReadingsByDays(days: number) {
   });
 
   return { data, isLoading, error, refetch, loading: isLoading };
+}
+
+/** ML Power prediction from Python API */
+export function usePrediction() {
+  return useQuery<PredictionResult>({
+    queryKey: ["prediction"],
+    queryFn: async () => {
+      const res = await fetch("/api/predict");
+      if (!res.ok) throw new Error("Gagal mengambil prediksi daya");
+      return res.json();
+    },
+  });
 }
 
 // ----- Transform helpers -----

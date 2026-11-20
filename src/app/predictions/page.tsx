@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import {
   PredictionChart,
   type PredictionChartPoint,
@@ -6,22 +5,7 @@ import {
 import { StatCard } from "@/components/stat-card";
 import { getPrediction } from "@/lib/predictions";
 import { formatTime } from "@/lib/date";
-
-export default function PredictionsPage() {
-  return (
-    <Suspense
-      fallback={
-        <div className="flex items-center justify-center py-20">
-          <div className="animate-pulse text-sm text-muted-foreground">
-            Memuat prediksi...
-          </div>
-        </div>
-      }
-    >
-      <PredictionContent />
-    </Suspense>
-  );
-}
+import { Suspense } from "react";
 
 async function PredictionContent() {
   let result;
@@ -75,13 +59,6 @@ async function PredictionContent() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Prediksi Daya</h1>
-        <p className="text-sm text-muted-foreground">
-          Estimasi keluaran daya jangka pendek — {prediction.forecast_minutes} menit ke depan
-        </p>
-      </div>
-
       <div className="grid gap-3 sm:grid-cols-3">
         <StatCard
           title="Daya Terprediksi"
@@ -116,6 +93,39 @@ async function PredictionContent() {
           daya surya {prediction.forecast_minutes} menit ke depan.
         </p>
       </div>
+    </div>
+  );
+}
+
+function PredictionFallback() {
+  return (
+    <div className="space-y-6" aria-busy="true">
+      <div className="grid gap-3 sm:grid-cols-3">
+        {[0, 1, 2].map((item) => (
+          <div
+            key={item}
+            className="h-28 animate-pulse rounded-xl border bg-muted/30"
+          />
+        ))}
+      </div>
+      <div className="h-72 animate-pulse rounded-xl border bg-muted/30" />
+      <div className="h-24 animate-pulse rounded-xl border bg-muted/30" />
+    </div>
+  );
+}
+
+export default function PredictionsPage() {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">Prediksi Daya</h1>
+        <p className="text-sm text-muted-foreground">
+          Estimasi keluaran daya jangka pendek dari data sensor terkini
+        </p>
+      </div>
+      <Suspense fallback={<PredictionFallback />}>
+        <PredictionContent />
+      </Suspense>
     </div>
   );
 }
